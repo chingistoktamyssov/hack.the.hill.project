@@ -14,10 +14,21 @@ body {
 .heart {
     width: 100px; /* Adjust size as needed */
     height: auto;
+    animation: pulse 1s infinite; /* Add the pulse animation */
 }
 
 .number {
     font-size: 5rem;
     font-weight: bold;
     margin-top: 20px;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2); /* Scale up the heart */
+    }
 }
