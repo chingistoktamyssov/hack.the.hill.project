@@ -14,6 +14,7 @@ BLECharacteristic heartRateChar("2A37", BLERead | BLENotify, sizeof(int));
 
 void onBeatDetected() {
     Serial.println("Beat!");
+    Serial.println(pox.getHeartRate());
 }
 
 void setup() {
@@ -46,17 +47,19 @@ void setup() {
 
 void loop() {
     BLEDevice central = BLE.central();
-    pox.update();
+    
     while(central.connected()){
+      pox.update();
       Serial.println("Connected BLE");
-      delay(500);
+      delay(500); 
+      int heartRate = pox.getHeartRate();
       if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
-          int heartRate = pox.getHeartRate();
+          
           // int spo2 = pox.getSpO2();
 
-          // Serial.print("Heart rate:");
-          // Serial.print(heartRate);
-          // Serial.print(" bpm / SpO2:");
+          Serial.print("Heart rate:");
+          Serial.print(pox.getHeartRate());
+          Serial.print(" bpm");
           // Serial.print(spo2);
           // Serial.println("%");
 
