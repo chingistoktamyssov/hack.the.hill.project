@@ -22,12 +22,9 @@ function handleRateChange(event) {
 }
 
 async function requestDevice() {
-  //only works for devices advertising heart rate service
-  // const _options = { filters: [{ services: ["heart_rate"] }] };
-
   const options = {
     acceptAllDevices: true,
-    optionalServices: ["00002a37-0000-1000-8000-00805f9b34fb"],
+    optionalServices: ["heart_rate"],
   };
   device = await navigator.bluetooth.requestDevice(options);
 }
@@ -36,23 +33,20 @@ async function connectDevice() {
   if (device.gatt.connected) return;
 
   const server = await device.gatt.connect();
-  console.log('abc')
-  const service = await server.getPrimaryService("0x180D");
-  console.log('io')
-  heartRate = await service.getCharacteristic("Heart Rate Measurement");
-  console.log('zyx')
+  const service = await server.getPrimaryService("heart_rate");
+  heartRate = await service.getCharacteristic("heart_rate_measurement");
   heartRate.addEventListener("characteristicvaluechanged", handleRateChange);
+  console.log(heartRate)
 }
-
 
 async function init() {
   if (!device) await requestDevice();
 
-  connectBTN.textContent = "connecting...";
-  await connectDevice();
-
-  beatAudio.play();
-  await heartRate.startNotifications();
+  connectBTN.textContent = "connected";
+  while(1) {
+    await connectDevice();
+    beatAudio.play();
+}
 }
 
 connectBTN.addEventListener("click", init);
